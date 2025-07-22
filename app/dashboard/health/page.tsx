@@ -1,73 +1,28 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Header } from '@/components/dashboard/header';
-import { TaskList } from '@/components/dashboard/task-list';
-import { TaskForm } from '@/components/dashboard/task-form';
-import { StatsCards } from '@/components/dashboard/stats-cards';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Task, TaskStats } from '@/types/task';
-import { getTasks, getTaskStats, createTask, updateTask, deleteTask } from '@/lib/tasks';
-import { Heart } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Header } from "@/components/dashboard/header/header";
+import { TaskList } from "@/components/dashboard/task-list";
+
+import { StatsCards } from "@/components/dashboard/stats-cards/stats-cards";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Heart } from "lucide-react";
+import { tasksStore } from "@/zustand/tasks.store";
+import { useGetTasks } from "@/hooks/use-get-tasks";
 
 export default function HealthPage() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [stats, setStats] = useState<TaskStats>({ total: 0, completed: 0, inProgress: 0, overdue: 0 });
-  const [loading, setLoading] = useState(true);
+  const tasks = tasksStore((state) => state.tasks);
+  const filteredByCategory = tasksStore((state) => state.filteredByCategory);
+
+  const { getTasks } = useGetTasks();
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    loadData();
+    getTasks("all", "health");
+    filteredByCategory("health");
   }, []);
-
-  const loadData = async () => {
-    try {
-      const [tasksData, statsData] = await Promise.all([
-        getTasks('health'),
-        getTaskStats('health')
-      ]);
-      setTasks(tasksData);
-      setStats(statsData);
-    } catch (error) {
-      console.error('Error loading health tasks:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCreateTask = async (taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => {
-    try {
-      const newTask = await createTask({ ...taskData, category: 'health' });
-      setTasks(prev => [newTask, ...prev]);
-      loadData();
-    } catch (error) {
-      console.error('Error creating health task:', error);
-    }
-  };
-
-  const handleUpdateTask = async (taskId: string, updates: Partial<Task>) => {
-    try {
-      const updatedTask = await updateTask(taskId, updates);
-      if (updatedTask) {
-        setTasks(prev => prev.map(task => 
-          task.id === taskId ? updatedTask : task
-        ));
-        loadData();
-      }
-    } catch (error) {
-      console.error('Error updating health task:', error);
-    }
-  };
-
-  const handleDeleteTask = async (taskId: string) => {
-    try {
-      await deleteTask(taskId);
-      setTasks(prev => prev.filter(task => task.id !== taskId));
-      loadData();
-    } catch (error) {
-      console.error('Error deleting health task:', error);
-    }
-  };
 
   if (loading) {
     return (
@@ -82,14 +37,10 @@ export default function HealthPage() {
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <Header 
-        title="Health Tasks" 
-        onAddClick={() => {}}
-      />
-      
+      <Header title="Health Tasks" />
+
       <ScrollArea className="flex-1 p-6">
         <div className="max-w-7xl mx-auto space-y-8">
-          {/* Header Section */}
           <div className="flex items-center gap-4 p-6 bg-gradient-to-r from-red-50 to-red-100 rounded-xl">
             <div className="p-3 bg-red-500 rounded-lg">
               <Heart className="h-8 w-8 text-white" />
@@ -100,24 +51,14 @@ export default function HealthPage() {
             </div>
           </div>
 
-          {/* Stats */}
-          <StatsCards stats={stats} />
+          <StatsCards category="health" />
 
-          {/* Tasks */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-lg font-semibold">Health Tasks</CardTitle>
-              <TaskForm 
-                onSubmit={handleCreateTask}
-                defaultCategory="health"
-              />
             </CardHeader>
             <CardContent>
-              <TaskList 
-                tasks={tasks}
-                onTaskUpdate={handleUpdateTask}
-                onTaskDelete={handleDeleteTask}
-              />
+              <TaskList tasks={tasks} category="health" />
             </CardContent>
           </Card>
         </div>

@@ -1,69 +1,64 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { Task } from '@/types/task';
-import { format } from 'date-fns';
-import { CalendarIcon, Plus } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Task } from "@/types/task.types";
+import { format } from "date-fns";
+import { CalendarIcon, Plus } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+import { useForm, Controller } from "react-hook-form";
 
 interface TaskFormProps {
-  onSubmit: (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => void;
-  defaultCategory?: string;
+  onSubmit: (task: Omit<Task, "id" | "createdAt" | "updatedAt">) => Promise<void>;
   trigger?: React.ReactNode;
+
+  type?: "create" | "edit";
+
+  initialData?: {
+    title: string;
+    description: string;
+    priority: "low" | "medium" | "high";
+    category: "work" | "personal" | "development" | "health";
+    dueDate: Date | undefined;
+  };
 }
 
-export function TaskForm({ onSubmit, defaultCategory, trigger }: TaskFormProps) {
+export function TaskForm({ onSubmit, trigger, initialData, type = "create" }: TaskFormProps) {
   const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [priority, setPriority] = useState<Task['priority']>('medium');
-  const [category, setCategory] = useState(defaultCategory || 'work');
-  const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!title.trim()) return;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+    reset: resetForm,
+  } = useForm({
+    defaultValues: {
+      ...initialData,
+    },
+  });
+
+  const submitForm = (formData: any) => {
+    const { title, description, priority, category, dueDate } = formData;
 
     onSubmit({
       title: title.trim(),
       description: description.trim() || undefined,
       priority,
-      status: 'todo',
+      status: "todo",
       category,
       dueDate,
     });
 
-    // Reset form
-    setTitle('');
-    setDescription('');
-    setPriority('medium');
-    setCategory(defaultCategory || 'work');
-    setDueDate(undefined);
+    resetForm();
     setOpen(false);
   };
 
@@ -76,98 +71,119 @@ export function TaskForm({ onSubmit, defaultCategory, trigger }: TaskFormProps) 
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger || defaultTrigger}
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger || defaultTrigger}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create New Task</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(submitForm)} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="title">Task Title</Label>
-            <Input
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter task title..."
-              required
-            />
+            <Input id="title" placeholder="Enter task title..." {...register("title", { required: "Enter title" })} />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter task description..."
+              {...register("description", { required: "Enter description" })}
               rows={3}
+              className="resize-none"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Priority</Label>
-              <Select value={priority} onValueChange={(value: Task['priority']) => setPriority(value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select priority" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                </SelectContent>
-              </Select>
+
+              <Controller
+                name="priority"
+                control={control}
+                rules={{ required: "Select priority" }}
+                render={({ field }) => {
+                  console.log("errors:", errors);
+
+                  return (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger className={errors.priority ? "outline-none ring-2 ring-ring ring-offset-2" : ""}>
+                        <SelectValue placeholder="Select priority" />
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        <SelectItem value="low">Low</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>
+                        <SelectItem value="high">High</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  );
+                }}
+              />
             </div>
 
             <div className="space-y-2">
               <Label>Category</Label>
-              <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="work">Work</SelectItem>
-                  <SelectItem value="personal">Personal</SelectItem>
-                  <SelectItem value="development">Development</SelectItem>
-                  <SelectItem value="health">Health</SelectItem>
-                </SelectContent>
-              </Select>
+
+              <Controller
+                name="category"
+                control={control}
+                rules={{ required: "Select category" }}
+                render={({ field }) => {
+                  return (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger className={errors.category ? "outline-none ring-2 ring-ring ring-offset-2" : ""}>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="work">Work</SelectItem>
+                        <SelectItem value="personal">Personal</SelectItem>
+                        <SelectItem value="development">Development</SelectItem>
+                        <SelectItem value="health">Health</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  );
+                }}
+              />
             </div>
           </div>
 
           <div className="space-y-2">
             <Label>Due Date</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !dueDate && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {dueDate ? format(dueDate, "PPP") : <span>Pick a date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={dueDate}
-                  onSelect={setDueDate}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+
+            <Controller
+              name="dueDate"
+              control={control}
+              rules={{ required: "Select due date" }}
+              render={({ field }) => {
+                return (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !field.value && "text-muted-foreground",
+                          errors.dueDate ? "outline-none ring-2 ring-ring ring-offset-2" : ""
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
+                    </PopoverContent>
+                  </Popover>
+                );
+              }}
+            />
           </div>
 
           <div className="flex justify-end gap-2 pt-4">
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit">Create Task</Button>
+            <Button type="submit">{type === "create" ? "Create task" : "Edit task"}</Button>
           </div>
         </form>
       </DialogContent>
