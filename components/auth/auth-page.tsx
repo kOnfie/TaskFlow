@@ -1,11 +1,9 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { Separator } from "@/components/ui/separator";
 import { CheckCircle } from "lucide-react";
 import Link from "next/link";
 
 import { AuthForm } from "@/components/auth/auth-form";
-import { GoogleForm } from "@/components/auth/google-form";
 
 interface AuthPageProps {
   typeOfAuth: "signup" | "signin";

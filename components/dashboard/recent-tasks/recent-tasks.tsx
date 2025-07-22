@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { useGetTasks } from "@/hooks/use-get-tasks";
 
 import { tasksStore } from "@/zustand/tasks.store";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function RecentTasks() {

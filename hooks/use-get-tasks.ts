@@ -1,3 +1,5 @@
+"use client";
+
 import { TaskCategory } from "@/types/task.types";
 import { tasksStore } from "@/zustand/tasks.store";
 

@@ -1,6 +1,5 @@
-import { useState } from "react";
 
-import { TaskCategory, TaskStats } from "@/types/task.types";
+import { TaskCategory } from "@/types/task.types";
 import { statsStore } from "@/zustand/stats.store";
 
 export function useGetStats(): {

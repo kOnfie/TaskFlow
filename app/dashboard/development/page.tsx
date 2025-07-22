@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Header } from "@/components/dashboard/header/header";
 import { TaskList } from "@/components/dashboard/task-list";
 
@@ -17,24 +17,10 @@ export default function DevelopmentPage() {
   const filteredByCategory = tasksStore((state) => state.filteredByCategory);
 
   const { getTasks } = useGetTasks();
-
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     getTasks("all", "development");
     filteredByCategory("development");
   }, []);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading development tasks...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
@@ -42,7 +28,6 @@ export default function DevelopmentPage() {
 
       <ScrollArea className="flex-1 p-6">
         <div className="max-w-7xl mx-auto space-y-8">
-          {/* Header Section */}
           <div className="flex items-center gap-4 p-6 bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-xl">
             <div className="p-3 bg-yellow-500 rounded-lg">
               <Code className="h-8 w-8 text-white" />
@@ -53,10 +38,8 @@ export default function DevelopmentPage() {
             </div>
           </div>
 
-          {/* Stats */}
           <StatsCards category="development" />
 
-          {/* Tasks */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-lg font-semibold">Development Tasks</CardTitle>

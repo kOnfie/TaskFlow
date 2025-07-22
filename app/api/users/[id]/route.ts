@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 import { getUserById } from "@/lib/db";
 import { catchError } from "@/app/utils/server/catchError";
 
-export const GET = async (req: NextRequest, { params }: { params: { id: string } }) => {
+export const GET = async (_: unknown, { params }: { params: { id: string } }) => {
   const userId = params.id;
 
   try {

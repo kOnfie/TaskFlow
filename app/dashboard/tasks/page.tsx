@@ -12,8 +12,7 @@ import { useGetTasks } from "@/hooks/use-get-tasks";
 import { tasksStore } from "@/zustand/tasks.store";
 
 export default function TasksPage() {
-  const [loading, setLoading] = useState(false);
-  const [filterStatus, setFilterStatus] = useState<"all" | "todo" | "in-progress" | "completed">("all");
+  const [filterStatus, setFilterStatus] = useState<"all" | "todo" | "in-progress" | "completed" | string>("all");
 
   const tasks = tasksStore((state) => state.tasks);
   const { getTasks } = useGetTasks();
@@ -27,17 +26,6 @@ export default function TasksPage() {
     return task.status === filterStatus;
   });
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading tasks...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <Header title="All Tasks" />
@@ -48,7 +36,7 @@ export default function TasksPage() {
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Tabs value={filterStatus} onValueChange={(value: any) => setFilterStatus(value)}>
+              <Tabs value={filterStatus} onValueChange={(value: string) => setFilterStatus(value)}>
                 <TabsList>
                   <TabsTrigger value="all">All</TabsTrigger>
                   <TabsTrigger value="todo">To Do</TabsTrigger>

@@ -1,10 +1,9 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Task, TaskCategory } from "@/types/task.types";
 import { format } from "date-fns";
-import { Calendar, Clock, MoreHorizontal, Edit, Trash2, Flag, CheckCircle2, Circle, AlertCircle } from "lucide-react";
+import { Calendar, Clock, MoreHorizontal, Edit, Trash2, CheckCircle2, Circle, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDeleteTask } from "@/hooks/use-delete-task";
 import { useUpdateTask } from "@/hooks/use-update-task";
