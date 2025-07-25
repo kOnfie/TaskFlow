@@ -25,7 +25,7 @@ interface TaskListProps {
   category?: TaskCategory;
 }
 
-export function TaskList({ tasks, category }: TaskListProps) {
+export function TaskList({ tasks, category = "work" }: TaskListProps) {
   const { deleteTask } = useDeleteTask();
   const { updateTaskRequest } = useUpdateTask();
   const { getStats } = useGetStats();

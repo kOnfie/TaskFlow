@@ -17,5 +17,5 @@ export interface TaskStats {
   overdue: number;
 }
 
-export const TASK_CATEGORIES = ["work", "personal", "development", "health", undefined] as const;
+export const TASK_CATEGORIES = ["work", "personal", "development", "health"] as const;
 export type TaskCategory = (typeof TASK_CATEGORIES)[number];

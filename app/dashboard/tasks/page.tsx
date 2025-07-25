@@ -57,7 +57,7 @@ export default function TasksPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <TaskList tasks={filteredTasks} category={undefined} />
+              <TaskList tasks={filteredTasks} />
             </CardContent>
           </Card>
         </div>

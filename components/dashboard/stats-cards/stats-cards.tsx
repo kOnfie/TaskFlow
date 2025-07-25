@@ -13,7 +13,7 @@ interface StatsCardsProps {
   category?: TaskCategory;
 }
 
-export function StatsCards({ category }: StatsCardsProps) {
+export function StatsCards({ category = "work" }: StatsCardsProps) {
   const { getStats } = useGetStats();
 
   const stats = statsStore((state) => state.stats);

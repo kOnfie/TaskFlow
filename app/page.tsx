@@ -1,14 +1,11 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, ArrowRight, Calendar, Users, Zap, Shield, Star, CircleUserRound } from "lucide-react";
+import { CheckCircle, ArrowRight, Calendar, Users, Zap, Shield, Star } from "lucide-react";
 import Link from "next/link";
+import Navigation from "@/components/home/navigation/navigation";
 
 export default function HomePage() {
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
-
   const features = [
     {
       icon: Calendar,
@@ -57,37 +54,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-2">
-              <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <CheckCircle className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-gray-900">TaskFlow</span>
-            </div>
-            <div className="flex items-center gap-4">
-              {user && user.name ? (
-                <Link href="/dashboard">
-                  <CircleUserRound />
-                </Link>
-              ) : (
-                <>
-                  <Link href="/auth/signin">
-                    <Button variant="ghost">Sign In</Button>
-                  </Link>
-                  <Link href="/auth/signup">
-                    <Button>Get Started</Button>
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navigation />
 
-      {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
@@ -118,7 +86,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -147,7 +114,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -176,7 +142,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-24 bg-blue-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to transform your productivity?</h2>
@@ -201,7 +166,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">

@@ -1,56 +1,5 @@
-"use client";
-
-import { useEffect } from "react";
-import { Header } from "@/components/dashboard/header/header";
-import { TaskList } from "@/components/dashboard/task-list";
-
-import { StatsCards } from "@/components/dashboard/stats-cards/stats-cards";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-
-import { User } from "lucide-react";
-import { tasksStore } from "@/zustand/tasks.store";
-import { useGetTasks } from "@/hooks/use-get-tasks";
+import { CategoryPage } from "@/components/dashboard/category-page/category-page";
 
 export default function PersonalPage() {
-  const tasks = tasksStore((state) => state.tasks);
-  const filteredByCategory = tasksStore((state) => state.filteredByCategory);
-
-  const { getTasks } = useGetTasks();
-
-  useEffect(() => {
-    getTasks("all", "personal");
-    filteredByCategory("personal");
-  }, []);
-
-  return (
-    <div className="flex-1 flex flex-col overflow-hidden">
-      <Header title="Personal Tasks" />
-
-      <ScrollArea className="flex-1 p-6">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <div className="flex items-center gap-4 p-6 bg-gradient-to-r from-green-50 to-green-100 rounded-xl">
-            <div className="p-3 bg-green-500 rounded-lg">
-              <User className="h-8 w-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Personal Tasks</h1>
-              <p className="text-gray-600">Manage your personal goals and activities</p>
-            </div>
-          </div>
-
-          <StatsCards category="personal" />
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-lg font-semibold">Personal Tasks</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <TaskList tasks={tasks} category="personal" />
-            </CardContent>
-          </Card>
-        </div>
-      </ScrollArea>
-    </div>
-  );
+  return <CategoryPage category="personal" />;
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { tasksStore } from "@/zustand/tasks.store";
 
 export function useUpdateTask() {

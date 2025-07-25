@@ -1,4 +1,4 @@
-import { Task } from "@/types/task.types";
+import { Task, TaskCategory } from "@/types/task.types";
 
 import { create } from "zustand";
 
@@ -12,7 +12,7 @@ type Actions = {
   addTaskToList: (task: Task) => void;
   deleteTaskFromList: (taskId: number) => void;
   updateTask: (taskId: number, params: any) => void;
-  filteredByCategory: (category: string) => void;
+  filteredByCategory: (category: TaskCategory) => void;
 };
 
 export const tasksStore = create<State & Actions>()((set) => ({
@@ -39,7 +39,7 @@ export const tasksStore = create<State & Actions>()((set) => ({
       return { ...state, tasks: updatedTasks };
     }),
 
-  filteredByCategory: (category: string) =>
+  filteredByCategory: (category: TaskCategory) =>
     set((state) => {
       const tasks = state.tasks.filter((task) => task.category === category);
 
