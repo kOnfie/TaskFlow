@@ -32,7 +32,7 @@ export function AuthForm({ typeOfAuth }: AuthFormProps) {
     const remember = formData.get("remember");
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/${typeOfAuth}`, {
+      const res = await fetch(`/api/${typeOfAuth === "signup" ? "register" : typeOfAuth}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, name }),
