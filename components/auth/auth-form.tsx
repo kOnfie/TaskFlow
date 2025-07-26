@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -26,38 +27,47 @@ export function AuthForm({ typeOfAuth }: AuthFormProps) {
     setLoading(true);
 
     const formData = new FormData(e.target as HTMLFormElement);
-    const email = formData.get("email");
-    const password = formData.get("password");
-    const name = formData.get("name");
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const name = formData.get("name") as string;
     const remember = formData.get("remember");
 
     try {
-      const res = await fetch(`/api/${typeOfAuth === "signup" ? "register" : typeOfAuth}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, name }),
-      });
+      if (typeOfAuth === "signup") {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              name,
+            },
+          },
+        });
 
-      const data = await res.json();
+        if (data?.user) {
+          await supabase.from("users").update({ name }).eq("id", data.user.id);
+        }
 
-      if (remember) {
-        localStorage.setItem("user", JSON.stringify(data));
-      } else {
-        sessionStorage.setItem("user", JSON.stringify(data));
+        console.log("data:", data);
+
+        if (error) {
+          setError(error.message);
+          setLoading(false);
+          return;
+        }
+
+        // if (data.user) {
+        //   router.push("/dashboard");
+        // }
+
+        if (remember) {
+          localStorage.setItem("user", JSON.stringify(data.user?.user_metadata));
+        } else {
+          sessionStorage.setItem("user", JSON.stringify(data.user?.user_metadata));
+        }
       }
 
-      if (res.status === 409) {
-        setError(data.error);
-        setLoading(false);
-      }
-
-      if (!res.ok) {
-        setLoading(false);
-        setError("Server error. Try later again please.");
-        throw new Error("Error: ", data.error);
-      }
-
-      router.push("/dashboard");
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       setError("Internal server error");
