@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 
 import { Label } from "@/components/ui/label";
@@ -19,7 +19,7 @@ export function AuthForm({ typeOfAuth }: AuthFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const router = useRouter();
+  // const router = useRouter();
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
