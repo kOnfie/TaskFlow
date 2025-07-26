@@ -32,7 +32,7 @@ export function AuthForm({ typeOfAuth }: AuthFormProps) {
     const remember = formData.get("remember");
 
     try {
-      const res = await fetch(`/api/${typeOfAuth}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/${typeOfAuth}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, name }),
@@ -60,7 +60,7 @@ export function AuthForm({ typeOfAuth }: AuthFormProps) {
       router.push("/dashboard");
     } catch (error) {
       setLoading(false);
-      setError("Internal server error")
+      setError("Internal server error");
       console.error("Sign-in error: ", error);
     }
   };
