@@ -13,7 +13,6 @@ export default function AuthPage({ typeOfAuth }: AuthPageProps) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4">
       <div className="w-full max-w-md space-y-8">
-        {/* Logo and Title */}
         <div className="text-center">
           <div className="mx-auto h-12 w-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4">
             <CheckCircle className="h-6 w-6 text-white" />

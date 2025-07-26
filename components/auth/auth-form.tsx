@@ -22,6 +22,7 @@ export function AuthForm({ typeOfAuth }: AuthFormProps) {
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+
     setLoading(true);
 
     const formData = new FormData(e.target as HTMLFormElement);
@@ -51,11 +52,15 @@ export function AuthForm({ typeOfAuth }: AuthFormProps) {
       }
 
       if (!res.ok) {
+        setLoading(false);
+        setError("Server error. Try later again please.");
         throw new Error("Error: ", data.error);
       }
 
       router.push("/dashboard");
     } catch (error) {
+      setLoading(false);
+      setError("Internal server error")
       console.error("Sign-in error: ", error);
     }
   };

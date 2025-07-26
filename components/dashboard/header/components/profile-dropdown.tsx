@@ -28,8 +28,6 @@ export default function ProfileDropdown({}: ProfileDropdownProps) {
     const user =
       JSON.parse(localStorage.getItem("user") as string) || JSON.parse(sessionStorage.getItem("user") as string);
 
-    console.log("user:", user);
-
     if (!user) {
       router.push("/");
       return;
