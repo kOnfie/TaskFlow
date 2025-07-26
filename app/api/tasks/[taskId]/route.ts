@@ -11,9 +11,9 @@ function validateTask(taskId: string): undefined | NextResponse<{ message: strin
   }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { taskId: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ taskId: string }> }) {
   try {
-    const { taskId } = params;
+    const { taskId } = await params;
     validateTask(taskId);
 
     const updates = await req.json();
@@ -25,9 +25,9 @@ export async function PUT(req: NextRequest, { params }: { params: { taskId: stri
   }
 }
 
-export async function DELETE(_: unknown, { params }: { params: { taskId: string } }) {
+export async function DELETE(_: unknown, { params }: { params: Promise<{ taskId: string }> }) {
   try {
-    const { taskId } = params;
+    const { taskId } = await params;
 
     validateTask(taskId);
 

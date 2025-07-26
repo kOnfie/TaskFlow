@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 import { getUserById } from "@/lib/db";
 import { catchError } from "@/app/utils/server/catchError";
 
-export const GET = async (_: unknown, { params }: { params: { id: string } }) => {
-  const userId = params.id;
+export const GET = async (_: unknown, { params }: { params: Promise<{ id: string }> }) => {
+  const { id: userId } = await params;
 
   try {
     const user = getUserById(userId);
