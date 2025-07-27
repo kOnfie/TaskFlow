@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { useForm, Controller } from "react-hook-form";
 
 interface TaskFormProps {
-  onSubmit: (task: Omit<Task, "id" | "createdAt" | "updatedAt">) => Promise<void>;
+  onSubmit: (task: Omit<Task, "id" | "createdAt" | "updatedAt" | "user_id">) => Promise<void>;
   trigger?: React.ReactNode;
 
   type?: "create" | "edit";

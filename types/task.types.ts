@@ -8,6 +8,7 @@ export interface Task {
   category: "work" | "personal" | "development" | "health";
   createdAt: Date;
   updatedAt: Date;
+  user_id: string;
 }
 
 export interface TaskStats {
