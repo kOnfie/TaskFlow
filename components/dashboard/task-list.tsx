@@ -35,7 +35,7 @@ export function TaskList({ tasks, category = "work" }: TaskListProps) {
     await getStats(category);
   }
 
-  async function updateTask(taskId: number, updates: Omit<Task, "id" | "createdAt" | "updatedAt">) {
+  async function updateTask(taskId: number, updates: Omit<Task, "id" | "createdAt" | "updatedAt" | "user_id">) {
     await updateTaskRequest(taskId, { ...updates });
     await getStats(category);
   }

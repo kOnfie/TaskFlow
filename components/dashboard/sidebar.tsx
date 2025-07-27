@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -27,6 +27,7 @@ const categories = [
 
 export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname();
+  const [width, setWidth] = useState<number>(0);
 
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const router = useRouter();
@@ -35,6 +36,30 @@ export function Sidebar({ className }: SidebarProps) {
     localStorage.removeItem("user");
     router.push("/");
   }
+
+  useEffect(() => {
+    if (width < 768) {
+      setCollapsed(true);
+    } else {
+      setCollapsed(false);
+    }
+
+    function uploadWidth(width: number) {
+      setWidth(width);
+
+      if (width < 768) {
+        setCollapsed(true);
+      } else {
+        setCollapsed(false);
+      }
+    }
+
+    window.addEventListener("resize", () => uploadWidth(window.innerWidth));
+
+    return () => {
+      window.removeEventListener("resize", () => uploadWidth(window.innerWidth));
+    };
+  }, []);
 
   return (
     <div
