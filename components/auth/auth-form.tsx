@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -20,6 +20,12 @@ export function AuthForm({ typeOfAuth }: AuthFormProps) {
   const [error, setError] = useState("");
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (localStorage.getItem("user") || sessionStorage.getItem("user")) {
+      router.push("/dashboard");
+    }
+  }, []);
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
