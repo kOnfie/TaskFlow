@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 
 import { Label } from "@/components/ui/label";
@@ -19,7 +19,7 @@ export function AuthForm({ typeOfAuth }: AuthFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // const router = useRouter();
+  const router = useRouter();
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +48,28 @@ export function AuthForm({ typeOfAuth }: AuthFormProps) {
           await supabase.from("users").update({ name }).eq("id", data.user.id);
         }
 
-        console.log("data:", data);
+        if (error) {
+          setError(error.message);
+          setLoading(false);
+          return;
+        }
+
+        if (data.user) {
+          router.push("/dashboard");
+        }
+
+        if (remember) {
+          localStorage.setItem("user", JSON.stringify(data.user?.user_metadata));
+        } else {
+          sessionStorage.setItem("user", JSON.stringify(data.user?.user_metadata));
+        }
+      }
+
+      if (typeOfAuth === "signin") {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
 
         if (error) {
           setError(error.message);
@@ -56,9 +77,9 @@ export function AuthForm({ typeOfAuth }: AuthFormProps) {
           return;
         }
 
-        // if (data.user) {
-        //   router.push("/dashboard");
-        // }
+        if (data.user) {
+          router.push("/dashboard");
+        }
 
         if (remember) {
           localStorage.setItem("user", JSON.stringify(data.user?.user_metadata));
@@ -139,7 +160,13 @@ export function AuthForm({ typeOfAuth }: AuthFormProps) {
       {error && <p className="text-red-500 font-bold">{error}</p>}
 
       <Button type="submit" disabled={loading} className="w-full h-12 text-base font-medium">
-        {loading ? <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div> : "Sign up"}
+        {loading ? (
+          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+        ) : typeOfAuth === "signin" ? (
+          "Sign in"
+        ) : (
+          "Sign up"
+        )}
       </Button>
     </form>
   );
