@@ -45,6 +45,7 @@ export default function ProfileDropdown({}: ProfileDropdownProps) {
 
   function signOut() {
     localStorage.removeItem("user");
+    sessionStorage.removeItem("user");
     router.push("/");
   }
 

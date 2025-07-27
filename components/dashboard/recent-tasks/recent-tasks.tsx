@@ -36,7 +36,7 @@ export default function RecentTasks() {
             View All
           </Button>
         </CardHeader>
-        <CardContent>
+        <CardContent className="max-sm:p-[5px]">
           <TaskList tasks={sortedTasks.length === 0 ? tasks : sortedTasks} />
         </CardContent>
       </Card>

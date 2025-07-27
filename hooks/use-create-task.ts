@@ -1,24 +1,20 @@
+"use client";
+
 import { supabase } from "@/lib/supabaseClient";
 import { Task } from "@/types/task.types";
 import { tasksStore } from "@/zustand/tasks.store";
+import { useGetUser } from "./user-get-user";
 
 export function useCreateTask() {
   const addTaskToList = tasksStore((state) => state.addTaskToList);
 
   async function createTask(task: Omit<Task, "id" | "createdAt" | "updatedAt" | "user_id">) {
     try {
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-
-      if (userError || !user) {
-        throw new Error("Failed to receive user");
-      }
+      const user = await useGetUser();
 
       const insertData = {
         ...task,
-        user_id: user.id,
+        userId: user.id,
       };
 
       const { data: newTask, error } = await supabase.from("tasks").insert([insertData]).select().single();

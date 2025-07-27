@@ -72,15 +72,12 @@ export default function HomePage() {
               work with ease. From personal to-dos to team projects.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/auth/signin">
+              <Link href="/auth/signup">
                 <Button size="lg" className="h-12 px-8 text-lg">
-                  Start Free Trial
+                  Start
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <Button size="lg" variant="outline" className="h-12 px-8 text-lg">
-                Watch Demo
-              </Button>
             </div>
           </div>
         </div>
@@ -149,19 +146,12 @@ export default function HomePage() {
             Join thousands of professionals who use TaskFlow to organize their work and achieve their goals.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/auth/signin">
+            <Link href="/auth/signup">
               <Button size="lg" className="h-12 px-8 text-lg bg-white text-blue-600 hover:bg-gray-50">
                 Get Started Free
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Button
-              size="lg"
-              variant="outline"
-              className="h-12 px-8 text-lg border-white text-white hover:bg-white hover:text-blue-600"
-            >
-              Contact Sales
-            </Button>
           </div>
         </div>
       </section>

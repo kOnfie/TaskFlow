@@ -48,7 +48,7 @@ export default function TasksPage() {
           </div>
 
           <Card>
-            <CardHeader>
+            <CardHeader className="max-sm:p-3">
               <CardTitle className="text-lg font-semibold">
                 {filterStatus === "all"
                   ? "All Tasks"
@@ -56,7 +56,7 @@ export default function TasksPage() {
                 <span className="ml-2 text-sm font-normal text-gray-500">({filteredTasks.length})</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="max-sm:p-3"> 
               <TaskList tasks={filteredTasks} />
             </CardContent>
           </Card>

@@ -84,14 +84,14 @@ export function CategoryPage({ category }: CategoryPage) {
         <div className="max-w-7xl mx-auto space-y-8">
           {HEADERS[category]}
 
-          <StatsCards category="personal" />
+          <StatsCards category={category} />
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-lg font-semibold">Personal Tasks</CardTitle>
             </CardHeader>
-            <CardContent>
-              <TaskList tasks={tasks} category="personal" />
+            <CardContent className="max-sm:p-[5px]">
+              <TaskList tasks={tasks} />
             </CardContent>
           </Card>
         </div>

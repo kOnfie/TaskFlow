@@ -15,6 +15,7 @@ import { CalendarIcon, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import { useForm, Controller } from "react-hook-form";
+import { Spinner } from "../ui/spinner";
 
 interface TaskFormProps {
   onSubmit: (task: Omit<Task, "id" | "createdAt" | "updatedAt" | "user_id">) => Promise<void>;
@@ -33,6 +34,7 @@ interface TaskFormProps {
 
 export function TaskForm({ onSubmit, trigger, initialData, type = "create" }: TaskFormProps) {
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -46,10 +48,11 @@ export function TaskForm({ onSubmit, trigger, initialData, type = "create" }: Ta
     },
   });
 
-  const submitForm = (formData: any) => {
+  async function submitForm(formData: any) {
+    setIsLoading(true);
     const { title, description, priority, category, dueDate } = formData;
 
-    onSubmit({
+    await onSubmit({
       title: title.trim(),
       description: description.trim() || undefined,
       priority,
@@ -59,8 +62,9 @@ export function TaskForm({ onSubmit, trigger, initialData, type = "create" }: Ta
     });
 
     resetForm();
+    setIsLoading(false);
     setOpen(false);
-  };
+  }
 
   const defaultTrigger = (
     <Button className="gap-2">
@@ -183,7 +187,7 @@ export function TaskForm({ onSubmit, trigger, initialData, type = "create" }: Ta
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit">{type === "create" ? "Create task" : "Edit task"}</Button>
+            <Button type="submit">{isLoading ? <Spinner /> : type === "create" ? "Create task" : "Edit task"}</Button>
           </div>
         </form>
       </DialogContent>

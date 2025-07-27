@@ -1,26 +1,39 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-import { Progress } from "@/components/ui/progress";
-import { TaskCategory } from "@/types/task.types";
 import { CheckCircle, Clock, AlertCircle, TrendingUp } from "lucide-react";
-import { useGetStats } from "@/hooks/use-get-stats";
-import { useEffect } from "react";
-import { statsStore } from "@/zustand/stats.store";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Task, TaskCategory } from "@/types/task.types";
+
+import { tasksStore } from "@/zustand/tasks.store";
 
 interface StatsCardsProps {
-  category?: TaskCategory;
+  category?: TaskCategory | "all";
 }
 
-export function StatsCards({ category = "work" }: StatsCardsProps) {
-  const { getStats } = useGetStats();
+export function StatsCards({ category = "all" }: StatsCardsProps) {
+  function isOverdue(task: Task, now: Date): boolean {
+    return !!task.dueDate && new Date(task.dueDate) < now && task.status !== "completed";
+  }
 
-  const stats = statsStore((state) => state.stats);
+  const totalTasks = tasksStore((state) => state.tasks);
 
-  useEffect(() => {
-    getStats(category);
-  }, []);
+  const now = new Date();
+
+  let tasks;
+  if (category !== "all") {
+    tasks = totalTasks.filter((task: Task) => task.category === category);
+  } else {
+    tasks = [...totalTasks];
+  }
+
+  const stats = {
+    total: tasks.length,
+    completed: tasks.filter((task: Task) => task.status === "completed").length,
+    inProgress: tasks.filter((task: Task) => task.status === "in-progress").length,
+    overdue: tasks.filter((task: Task) => isOverdue(task, now)).length,
+  };
 
   const completionRate = stats.total > 0 ? (stats.completed / stats.total) * 100 : 0;
 
@@ -56,7 +69,7 @@ export function StatsCards({ category = "work" }: StatsCardsProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 max-sm:gap-[5px] max-sm:mb-[5px]">
       {cards.map((card) => {
         const Icon = card.icon;
         return (

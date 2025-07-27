@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { Mail, Lock, Eye, EyeOff, User } from "lucide-react";
+import { Spinner } from "../ui/spinner";
 
 interface AuthFormProps {
   typeOfAuth: "signup" | "signin";
@@ -166,13 +167,7 @@ export function AuthForm({ typeOfAuth }: AuthFormProps) {
       {error && <p className="text-red-500 font-bold">{error}</p>}
 
       <Button type="submit" disabled={loading} className="w-full h-12 text-base font-medium">
-        {loading ? (
-          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-        ) : typeOfAuth === "signin" ? (
-          "Sign in"
-        ) : (
-          "Sign up"
-        )}
+        {loading ? <Spinner /> : typeOfAuth === "signin" ? "Sign in" : "Sign up"}
       </Button>
     </form>
   );

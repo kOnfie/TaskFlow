@@ -1,5 +1,7 @@
 "use client";
 
+import { supabase } from "@/lib/supabaseClient";
+import { useGetUser } from "./user-get-user";
 import { tasksStore } from "@/zustand/tasks.store";
 
 export function useUpdateTask() {
@@ -7,13 +9,20 @@ export function useUpdateTask() {
 
   async function updateTaskRequest(taskId: number, updates: any) {
     try {
-      const res = await fetch(`/api/tasks/${taskId}`, {
-        method: "PUT",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify(updates),
-      });
+      const user = await useGetUser();
 
-      await res.json();
+      const { error } = await supabase
+        .from("tasks")
+        .update(updates)
+        .eq("id", taskId)
+        .eq("userId", user.id)
+        .select()
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
       updateTask(taskId, { ...updates });
     } catch (error) {
       console.error("Error deleting task:", error);

@@ -9,9 +9,11 @@ export default function Navigation() {
   const [user, setUser] = useState({ name: "" });
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-
-    setUser(user);
+    if (localStorage.getItem("user")) {
+      setUser(JSON.parse(localStorage.getItem("user") || "{}"));
+    } else if (sessionStorage.getItem("user")) {
+      setUser(JSON.parse(sessionStorage.getItem("user") || "{}"));
+    }
   }, []);
 
   return (

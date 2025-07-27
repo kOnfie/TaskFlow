@@ -11,33 +11,28 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Task, TaskCategory } from "@/types/task.types";
+import { Task } from "@/types/task.types";
 import { format } from "date-fns";
 import { Calendar, Clock, MoreHorizontal, Edit, Trash2, CheckCircle2, Circle, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDeleteTask } from "@/hooks/use-delete-task";
 import { useUpdateTask } from "@/hooks/use-update-task";
 import { TaskForm } from "./task-form";
-import { useGetStats } from "@/hooks/use-get-stats";
 
 interface TaskListProps {
   tasks: Task[];
-  category?: TaskCategory;
 }
 
-export function TaskList({ tasks, category = "work" }: TaskListProps) {
+export function TaskList({ tasks }: TaskListProps) {
   const { deleteTask } = useDeleteTask();
   const { updateTaskRequest } = useUpdateTask();
-  const { getStats } = useGetStats();
 
   async function handleTaskToggle(taskId: number, taskStatus: "todo" | "in-progress" | "completed") {
     await updateTaskRequest(taskId, { status: taskStatus === "completed" ? "todo" : "completed" });
-    await getStats(category);
   }
 
   async function updateTask(taskId: number, updates: Omit<Task, "id" | "createdAt" | "updatedAt" | "user_id">) {
     await updateTaskRequest(taskId, { ...updates });
-    await getStats(category);
   }
 
   const getPriorityColor = (priority: Task["priority"]) => {
@@ -97,8 +92,8 @@ export function TaskList({ tasks, category = "work" }: TaskListProps) {
               overdue && "border-red-200 bg-red-50/50"
             )}
           >
-            <CardContent className="p-4">
-              <div className="flex items-center gap-4">
+            <CardContent className="p-4 max-sm:p-2">
+              <div className="flex items-center gap-4 max-sm:flex-col max-sm:items-start">
                 {/* Checkbox */}
                 <Checkbox
                   checked={isCompleted}
@@ -108,7 +103,7 @@ export function TaskList({ tasks, category = "work" }: TaskListProps) {
 
                 {/* Task Content */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-2">
+                  <div className="flex items-center gap-3 mb-2 max-sm:flex-col max-sm:items-start">
                     <h3 className={cn("font-medium text-gray-900", isCompleted && "line-through text-gray-500")}>
                       {task.title}
                     </h3>
@@ -135,7 +130,7 @@ export function TaskList({ tasks, category = "work" }: TaskListProps) {
                     </p>
                   )}
 
-                  <div className="flex items-center gap-4 text-sm text-gray-500">
+                  <div className="flex items-center gap-4 text-sm text-gray-500 max-sm:flex-col max-sm:items-start">
                     {task.dueDate && (
                       <div className="flex items-center gap-1">
                         <Calendar className="h-4 w-4" />
