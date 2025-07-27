@@ -69,14 +69,6 @@ export function Sidebar({ className }: SidebarProps) {
         collapsed ? "w-16 max-sm:w-12" : "w-64",
         className
       )}
-      onMouseMove={() => {
-        if (width < 768) return;
-        setCollapsed(false);
-      }}
-      onMouseOut={() => {
-        if (width < 768) return;
-        setCollapsed(true);
-      }}
     >
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
         {!collapsed && <h1 className="text-xl font-bold text-gray-900">TaskFlow</h1>}
